@@ -15,7 +15,8 @@ const contentDiv = document.getElementById('content');
 // Hàm load và render Markdown
 async function loadMarkdown(file) {
     try {
-        const response = await fetch(`/md/${file}`);
+        // Sửa: Dùng relative path 'md/${file}' thay vì '/md/${file}'
+        const response = await fetch(`md/${file}`);
         if (!response.ok) throw new Error('File không tồn tại');
         const markdown = await response.text();
         contentDiv.innerHTML = marked.parse(markdown);
