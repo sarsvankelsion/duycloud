@@ -1,30 +1,176 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghi chú học tập</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>🚀 C++ Competitive Programming Kit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00f2ff; --pink: #ff00e5; }
+        body { font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
+        .dark body { background-color: #020617; color: #f1f5f9; }
+        .light body { background-color: #f8fafc; color: #0f172a; }
+        
+        .code-font { font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+        .neon-card { border: 1px solid rgba(0, 242, 255, 0.2); transition: 0.3s; position: relative; overflow: hidden; }
+        .dark .neon-card:hover { border-color: var(--neon); box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+        .light .neon-card { background: white; border-color: #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        
+        /* Code block styling */
+        .dark pre { background: #010409; color: #e6edf3; border: 1px solid #30363d; }
+        .light pre { background: #f1f5f9; color: #1e293b; border: 1px solid #e2e8f0; }
+
+        .tab-active { border-bottom: 3px solid var(--neon); color: var(--neon); }
+        .hide { display: none; }
+    </style>
 </head>
-<body>
-    <header>
-        <h1>Ghi chú học tập</h1>
-    </header>
-    <nav>
-        <div class="tabs">
-            <button class="tab active" data-file="toan.md">Toán</button>
-            <button class="tab" data-file="van.md">Ngữ văn</button>
-            <button class="tab" data-file="anh.md">Tiếng Anh</button>
-            <button class="tab" data-file="congnghe.md">Công nghệ</button>
-            <button class="tab" data-file="gdcd.md">Giáo dục công dân</button>
-            <button class="tab" data-file="gdthechat.md">Giáo dục thể chất</button>
+<body class="min-h-screen">
+
+    <header class="sticky top-0 z-50 backdrop-blur-lg border-b dark:border-slate-800 border-slate-200 p-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="text-3xl animate-bounce">⚡</span>
+                <h1 class="text-2xl font-black tracking-tight dark:text-cyan-400 text-blue-600">CONTEST LIBRARY v2.0</h1>
+            </div>
+
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm thuật toán..." 
+                    class="flex-1 md:w-80 px-4 py-2 rounded-lg dark:bg-slate-900 bg-white border dark:border-slate-700 border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <button onclick="toggleTheme()" class="p-2 rounded-full dark:bg-slate-800 bg-slate-200 hover:scale-110 transition">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
         </div>
-    </nav>
-    <main>
-        <div id="content"></div>
+
+        <div class="max-w-7xl mx-auto mt-4 flex gap-6 font-bold text-sm uppercase tracking-widest">
+            <button onclick="switchTab('grid')" id="btn-grid" class="tab-active py-2">🏠 Giao diện chính</button>
+            <button onclick="switchTab('raw')" id="btn-raw" class="py-2 opacity-50">📄 Raw Markdown</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6">
+        <div id="view-grid" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+            </div>
+
+        <div id="view-raw" class="hide">
+            <div class="relative">
+                <button onclick="copyRaw()" class="absolute right-4 top-4 bg-cyan-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg hover:bg-cyan-600">Copy All Markdown 📋</button>
+                <textarea id="rawTextarea" readonly class="w-full h-[70vh] p-6 rounded-2xl dark:bg-slate-900 bg-slate-100 dark:text-cyan-100 text-slate-800 code-font border-2 border-dashed border-cyan-500/30 outline-none"></textarea>
+            </div>
+        </div>
     </main>
-    <script src="script.js"></script>
+
+    <script>
+        const snippets = [
+            { cat: "🔢 Số học cơ bản", emoji: "💎", items: [
+                { name: "Chuyển xâu sang số (Cơ số)", code: `int cd(string s) {\n  int t=0;\n  while(s.length()>0) {\n    int k=s[0]-48;\n    t=t*10+k;\n    s=s.erase(0,1);\n  }\n  return t;\n}`, example: "cd('123') -> 123" },
+                { name: "Tổng chữ số", code: `int tcs(int n) {\n  int t=0;\n  while(n>0) { t+=n%10; n/=10; }\n  return t;\n}`, example: "tcs(123) -> 6" },
+                { name: "Số lượng chữ số", code: `int slcs(int n) {\n  int t=0;\n  while(n>0) { t++; n/=10; }\n  return t;\n}`, example: "slcs(100) -> 3" }
+            ]},
+            { cat: "⚙️ Nhị phân & Hệ cơ số", emoji: "🔌", items: [
+                { name: "Lấy xâu nhị phân", code: `string xnp(int n) {\n  string s="";\n  while(n>0) {\n    char t=(char)(n%2 + '0');\n    s=t+s; n=n/2;\n  }\n  return s;\n}`, example: "Thập phân -> Nhị phân" },
+                { name: "Số thập phân từ xâu nhị phân", code: `int dtp(string s) {\n  int k=0;\n  for(int i=0;i<s.length();i++) {\n    int n=s.length();\n    k+=(s[i]-48)*pow(2,n-i-1);\n  }\n  return k;\n}`, example: "Nhị phân -> Thập phân" }
+            ]},
+            { cat: "🧬 Nguyên tố & Fibonacci", emoji: "🧪", items: [
+                { name: "Sàng ước (Sieve Divisors)", code: `void sieve_div() {\n  for (int i = 1; i <= N; i++) d[i] = 1; \n  for (int i = 2; i <= N; i++) {\n    for (int j = i; j <= N; j += i)\n      d[j]++;\n  }\n}`, example: "Đếm số lượng ước của mỗi số từ 1 đến N" },
+                { name: "Kiểm tra nguyên tố", code: `int ktnt(int n) {\n  if(n<2) return 0;\n  for(int i=2;i*i<=n;i++) if(n%i==0) return 0;\n  return 1;\n}` },
+                { name: "Sàng nguyên tố (Sieve)", code: `void sieve() {\n  memset(isPrime,true,sizeof(isPrime));\n  isPrime[1]= isPrime[0] = false;\n  for(long long i = 2; i * i <= nmax; ++i)\n    if(isPrime[i])\n      for(long long j = i * i; j <= nmax; j += i)\n        isPrime[j] = false;\n}` },
+                { name: "Hàm kiểm tra Fibonacci", code: `void fbnc(int n) {\n  int a=1,b=1,m=1,i=1;\n  while(a<=n) { i++; b=m; m=a; a+=b; }\n  if(a-b==n) cout<<i<<endl;\n  else cout<<"-1"<<endl;\n}` },
+                { name: "Phân tích TSNT (Có mũ)", code: `int n; cin >> n; int dem;\nfor(int i = 2; i <= n; i++) {\n  dem = 0;\n  while(n % i == 0) { ++dem; n/=i; }\n  if(dem) {\n    cout<<i;\n    if(dem>1) cout <<"^"<<dem;\n    if(n>i) cout<<"*";\n  }\n}` },
+                { name: "Phân tích TSNT (Không mũ)", code: `void tsnt(int n) {\n  int i=2, dem=0, a[100];\n  while (n>1) {\n    if (n%i==0) { n/=i; a[dem++]=i; }\n    else i++;\n  }\n  if (dem == 0) a[dem++] = n;\n  for (i=0;i<dem;i++) cout<<a[i]<<" ";\n}` }
+            ]},
+            { cat: "📐 Hình học & Toán", emoji: "📐", items: [
+                { name: "Khoảng cách 2 điểm", code: `double kc(int x1,int y1,int x2,int y2) {\n  return sqrt(pow((x1-x2),2)+pow((y1-y2),2));\n}` },
+                { name: "Diện tích tam giác (Heron)", code: `double dt(int x1,int y1,int x2,int y2,int x3,int y3) {\n  int d1=kc(x1,y1,x2,y2);\n  int d2=kc(x2,y3,x3,y3);\n  int d3=kc(x1,y1,x3,y3);\n  int k=(d1+d2+d3)/2;\n  return sqrt(k*(k-d1)*(k-d2)*(k-d3));\n}` },
+                { name: "Kiểm tra chính phương", code: `int ktcp(int n) {\n  int x=(int)sqrt(n);\n  return (x*x==n);\n}` },
+                { name: "UCLN & BCNN", code: `int ucln(int m,int n) { if(n==0) return m; return ucln(n,(m%n)); }\n\nint bcnn(int a,int b) { return a*b/ucln(a,b); }` },
+                { name: "Căn bậc hai (Tối ưu)", code: `void cb2(int n) {\n  for(int i=sqrt(n);i>=1;i--)\n  if(n%(i*i)==0) {\n    cout<<i<<" "<<n/(i*i)<<endl;\n    break;\n  }\n}` }
+            ]},
+            { cat: "🧶 Xử lý Xâu & Mảng", emoji: "🧶", items: [
+                { name: "Cộng 2 số siêu lớn", code: `string tong(string a,string b) {\n  while(a.length()<b.length()) a='0'+a;\n  while(a.length()>b.length()) b='0'+b;\n  int nho=0; string kq;\n  for(int i=a.length()-1;i>=0;--i) {\n    int d=(a[i]-'0')+(b[i]-'0')+nho;\n    nho=d/10; kq=(char)(d%10+'0')+kq;\n  }\n  if(nho) kq='1'+kq;\n  return kq;\n}` },
+                { name: "Số lần xuất hiện (Xâu)", code: `// Đoạn code sort và đếm\nfor(int i=0;i<=s.length()-2;i++)\n  for(int j=i+1;j<=s.length()-1;j++)\n    if(s[i] >= s[j]) swap(s[i], s[j]);\nint dem = 1;\nfor(int i=0;i<=s.length()-1;i++)\n  if(s[i] == s[i+1]) dem++;\n  else { cout<<s[i]<<" "<<dem<<endl; dem = 1; }` },
+                { name: "Đếm kí tự (Fixed)", code: `void demslxh(string s) {\n  sort(s.begin(),s.end());\n  int d=0;\n  for(int i=0;i<s.length();i++) {\n    d++;\n    if(s[i]!=s[i+1]) { cout<<s[i]<<" "<<d<<endl; d=0; }\n  }\n}` },
+                { name: "Nhập mảng vô hạn", code: `int a[1000], n=0, x;\nwhile(cin>>x) { a[++n]=x; }` }
+            ]},
+            { cat: "🛠️ Mẹo & Syntax", emoji: "🛠️", items: [
+                { name: "Mã ASCII Cần nhớ", code: `-48: Kí tự số -> Số\n+32: Hoa -> Thường\n'32': Dấu cách\n'0'-'9': Kiểm tra số\n'A'-'Z': Kiểm tra chữ` },
+                { name: "Sort các loại", code: `sort(a, a+n); // Tăng\nsort(a, a+n, greater<int>()); // Giảm\nsort(s.begin(), s.end()); // Xâu` },
+                { name: "Convert số -> xâu", code: `ostringstream convert;\nconvert << number;\nstring result = convert.str();` },
+                { name: "Memset & Vector", code: `memset(mang, gia_tri, sizeof mang);\nvector<int> a(n, 0);` },
+                { name: "Static Cast", code: `int k=static_cast<char>(t);\nchar t=static_cast<int>(k);` },
+                { name: "Đỉnh hình chữ nhật M2C", code: `int kt(int i,int j,int h,int k) {\n  if(a[i][j]+a[j][k]+a[h][k]+a[h][j]==s) return 1;\n  return 0;\n}` }
+            ]}
+        ];
+
+        function render(filter = "") {
+            const grid = document.getElementById('view-grid');
+            grid.innerHTML = "";
+            let rawMD = "";
+
+            snippets.forEach(group => {
+                const filtered = group.items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase()));
+                if (filtered.length > 0) {
+                    rawMD += `### ${group.cat}\n`;
+                    const div = document.createElement('div');
+                    div.className = "break-inside-avoid mb-6";
+                    div.innerHTML = `
+                        <div class="neon-card p-5 rounded-2xl">
+                            <h2 class="text-lg font-black mb-4 dark:text-cyan-300 text-blue-700 flex items-center gap-2">
+                                <span>${group.emoji}</span> ${group.cat}
+                            </h2>
+                            <div class="space-y-4">
+                                ${filtered.map(item => {
+                                    rawMD += `#### ${item.name}\n\`\`\`cpp\n${item.code}\n\`\`\`\n`;
+                                    return `
+                                    <div>
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-bold uppercase tracking-tighter opacity-70">${item.name}</span>
+                                            <button onclick="copySingle(\`${btoa(unescape(encodeURIComponent(item.code)))}\`, this)" class="text-[10px] bg-cyan-500/10 text-cyan-500 px-2 py-1 rounded hover:bg-cyan-500 hover:text-white transition">COPY</button>
+                                        </div>
+                                        <pre class="p-3 rounded-lg overflow-x-auto code-font"><code>${escapeHTML(item.code)}</code></pre>
+                                    </div>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(div);
+                }
+            });
+            document.getElementById('rawTextarea').value = rawMD;
+        }
+
+        function escapeHTML(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+        function copySingle(base64, btn) {
+            const code = decodeURIComponent(escape(atob(base64)));
+            navigator.clipboard.writeText(code);
+            const original = btn.innerText;
+            btn.innerText = "COPIED!";
+            setTimeout(() => btn.innerText = original, 1000);
+        }
+
+        function copyRaw() {
+            const text = document.getElementById('rawTextarea').value;
+            navigator.clipboard.writeText(text);
+            alert("Đã copy toàn bộ Markdown!");
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            document.getElementById('themeIcon').innerText = isDark ? "🌙" : "☀️";
+        }
+
+        function switchTab(tab) {
+            document.getElementById('view-grid').className = tab === 'grid' ? 'columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6' : 'hide';
+            document.getElementById('view-raw').className = tab === 'raw' ? '' : 'hide';
+            document.getElementById('btn-grid').className = tab === 'grid' ? 'tab-active py-2' : 'py-2 opacity-50';
+            document.getElementById('btn-raw').className = tab === 'raw' ? 'tab-active py-2' : 'py-2 opacity-50';
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => render(e.target.value));
+        render();
+    </script>
 </body>
 </html>
