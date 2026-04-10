@@ -1,176 +1,425 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 C++ Competitive Programming Kit</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --neon: #00f2ff; --pink: #ff00e5; }
-        body { font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
-        .dark body { background-color: #020617; color: #f1f5f9; }
-        .light body { background-color: #f8fafc; color: #0f172a; }
-        
-        .code-font { font-family: 'Fira Code', monospace; font-size: 0.85rem; }
-        .neon-card { border: 1px solid rgba(0, 242, 255, 0.2); transition: 0.3s; position: relative; overflow: hidden; }
-        .dark .neon-card:hover { border-color: var(--neon); box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
-        .light .neon-card { background: white; border-color: #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        
-        /* Code block styling */
-        .dark pre { background: #010409; color: #e6edf3; border: 1px solid #30363d; }
-        .light pre { background: #f1f5f9; color: #1e293b; border: 1px solid #e2e8f0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ sarsRS libs ✦</title>
 
-        .tab-active { border-bottom: 3px solid var(--neon); color: var(--neon); }
-        .hide { display: none; }
-    </style>
+<!-- Logo Tab (Favicon) -->
+<link rel="icon" type="image/png" href="https://liquipedia.net/commons/images/6/60/Lenovo_Legion_icon_darkmode.png">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font hỗ trợ Tiếng Việt -->
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Oswald:wght@500;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<!-- PrismJS Syntax Highlighting Theme (Tomorrow Night - GIỮ MÀU CHO CODE) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+<!-- Desmos API -->
+<script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+<style>
+  :root {
+    --bg: #050508;
+    --fg: #e2e8f0;
+    --neon-cyan: #ffffff; /* Trắng */
+    --neon-pink: #888888; /* Xám */
+    --card-bg: rgba(15, 15, 20, 0.75);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none; 
+  }
+
+  /* CUSTOM SCROLLBAR Trắng đen */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.5); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+  
+  pre::-webkit-scrollbar { height: 6px; }
+  pre::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 4px; margin: 4px; }
+  pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.6); border-radius: 4px; }
+
+  /* Lưới Grid Background mờ (Màu bạc) */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 1;
+  }
+
+  /* ===== CON TRỎ CHUỘT (Trắng/Bạc) ===== */
+  #cursor-dot, #cursor-ring {
+    position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+    border-radius: 50%; pointer-events: none; z-index: 9999;
+  }
+  #cursor-dot { width: 6px; height: 6px; background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); }
+  #cursor-ring { width: 34px; height: 34px; border: 1px solid rgba(255, 255, 255, 0.5); transition: width 0.1s, height 0.1s; }
+  
+  /* Hạt tỏa ra */
+  #fire-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9998; }
+  main { position: relative; z-index: 2; }
+
+  /* Typography */
+  .title-neon {
+    font-family: 'Oswald', sans-serif; 
+    font-size: clamp(3rem, 6vw, 5rem);
+    letter-spacing: 0.05em; 
+    background: linear-gradient(90deg, #ffffff, #4a4a4a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  }
+
+  /* Layout Tabs */
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+  }
+  .tab-active { color: var(--neon-cyan); border-bottom: 2px solid var(--neon-cyan); text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+
+  /* Code Cards */
+  .jeb-card {
+    background: var(--card-bg); 
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.05); 
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative; overflow: hidden; 
+    border-radius: 12px;
+  }
+  
+  .jeb-card:hover { 
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-4px); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 255, 255, 0.1); 
+  }
+
+  /* Hiệu ứng copy đổi sang nháy trắng/xám */
+  @keyframes rainbow_border {
+    0% { border-color: #ffffff; box-shadow: 0 0 30px #ffffff; }
+    33% { border-color: #888888; box-shadow: 0 0 30px #888888; }
+    66% { border-color: #444444; box-shadow: 0 0 30px #444444; }
+    100% { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+  }
+  .copied-flash { animation: rainbow_border 0.6s ease-out; }
+
+  /* Overriding PrismJS (Giữ nguyên cho code có màu) */
+  pre[class*="language-"] {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255,255,255,0.03) !important;
+    border-radius: 8px; margin: 0 !important;
+    overflow-x: auto;
+  }
+  code[class*="language-"], pre[class*="language-"] {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.85rem !important;
+    text-shadow: none !important;
+  }
+
+  /* ===== THIẾT KẾ KHU VỰC DESMOS ===== */
+  #desmos-container { display: none; }
+  #calculator {
+    width: 100%; height: 75vh; border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    filter: saturate(0) contrast(1.1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.1)); /* Ép Desmos về trắng đen */
+  }
+  .dcg-branding, .dcg-settings-pillbox { display: none !important; }
+
+  /* Toast (Thông báo) */
+  #toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: #ffffff; color: #000; font-family: 'JetBrains Mono', monospace; font-weight: bold;
+    padding: 10px 30px; border-radius: 30px; z-index: 10000; opacity: 0; pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 0 20px #ffffff;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+</style>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <header class="sticky top-0 z-50 backdrop-blur-lg border-b dark:border-slate-800 border-slate-200 p-4">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-2">
-                <span class="text-3xl animate-bounce">⚡</span>
-                <h1 class="text-2xl font-black tracking-tight dark:text-cyan-400 text-blue-600">CONTEST LIBRARY v2.0</h1>
-            </div>
+<canvas id="fire-canvas"></canvas>
 
-            <div class="flex items-center gap-4 w-full md:w-auto">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm thuật toán..." 
-                    class="flex-1 md:w-80 px-4 py-2 rounded-lg dark:bg-slate-900 bg-white border dark:border-slate-700 border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500">
-                <button onclick="toggleTheme()" class="p-2 rounded-full dark:bg-slate-800 bg-slate-200 hover:scale-110 transition">
-                    <span id="themeIcon">🌙</span>
-                </button>
-            </div>
-        </div>
+<!-- Chuột Custom -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
-        <div class="max-w-7xl mx-auto mt-4 flex gap-6 font-bold text-sm uppercase tracking-widest">
-            <button onclick="switchTab('grid')" id="btn-grid" class="tab-active py-2">🏠 Giao diện chính</button>
-            <button onclick="switchTab('raw')" id="btn-raw" class="py-2 opacity-50">📄 Raw Markdown</button>
-        </div>
-    </header>
+<div id="toast">COPIED TO CLIPBOARD!</div>
 
-    <main class="max-w-7xl mx-auto p-6">
-        <div id="view-grid" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-            </div>
+<main class="max-w-7xl mx-auto p-6 pt-10">
+  
+  <header class="flex flex-col md:flex-row justify-between items-end gap-6 mb-8">
+    <div>
+      <p class="font-['JetBrains_Mono'] text-xs tracking-[0.3em] uppercase text-gray-400 mb-2">✦ ALGORITHMS & MATH ✦</p>
+      <h1 class="title-neon">sarsRS kits</h1>
+    </div>
+    
+    <!-- Tab Controls -->
+    <div class="flex gap-6 text-sm tracking-widest text-gray-500">
+      <button id="btn-code" onclick="switchTab('code')" class="tab-btn tab-active pb-2">CODE LIBRARY</button>
+      <button id="btn-desmos" onclick="switchTab('desmos')" class="tab-btn pb-2">DESMOS PLANE</button>
+    </div>
+  </header>
 
-        <div id="view-raw" class="hide">
-            <div class="relative">
-                <button onclick="copyRaw()" class="absolute right-4 top-4 bg-cyan-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg hover:bg-cyan-600">Copy All Markdown 📋</button>
-                <textarea id="rawTextarea" readonly class="w-full h-[70vh] p-6 rounded-2xl dark:bg-slate-900 bg-slate-100 dark:text-cyan-100 text-slate-800 code-font border-2 border-dashed border-cyan-500/30 outline-none"></textarea>
-            </div>
-        </div>
-    </main>
+  <div id="search-bar" class="w-full relative mb-8">
+    <input type="text" id="searchInput" placeholder="Tìm kiếm thuật toán (VD: Sàng nguyên tố, BFS, GCD)..." 
+      class="w-full bg-black/40 border border-gray-700 text-white font-['JetBrains_Mono'] text-sm px-6 py-4 rounded-xl focus:outline-none focus:border-white transition-colors placeholder-gray-600">
+  </div>
 
-    <script>
-        const snippets = [
-            { cat: "🔢 Số học cơ bản", emoji: "💎", items: [
-                { name: "Chuyển xâu sang số (Cơ số)", code: `int cd(string s) {\n  int t=0;\n  while(s.length()>0) {\n    int k=s[0]-48;\n    t=t*10+k;\n    s=s.erase(0,1);\n  }\n  return t;\n}`, example: "cd('123') -> 123" },
-                { name: "Tổng chữ số", code: `int tcs(int n) {\n  int t=0;\n  while(n>0) { t+=n%10; n/=10; }\n  return t;\n}`, example: "tcs(123) -> 6" },
-                { name: "Số lượng chữ số", code: `int slcs(int n) {\n  int t=0;\n  while(n>0) { t++; n/=10; }\n  return t;\n}`, example: "slcs(100) -> 3" }
-            ]},
-            { cat: "⚙️ Nhị phân & Hệ cơ số", emoji: "🔌", items: [
-                { name: "Lấy xâu nhị phân", code: `string xnp(int n) {\n  string s="";\n  while(n>0) {\n    char t=(char)(n%2 + '0');\n    s=t+s; n=n/2;\n  }\n  return s;\n}`, example: "Thập phân -> Nhị phân" },
-                { name: "Số thập phân từ xâu nhị phân", code: `int dtp(string s) {\n  int k=0;\n  for(int i=0;i<s.length();i++) {\n    int n=s.length();\n    k+=(s[i]-48)*pow(2,n-i-1);\n  }\n  return k;\n}`, example: "Nhị phân -> Thập phân" }
-            ]},
-            { cat: "🧬 Nguyên tố & Fibonacci", emoji: "🧪", items: [
-                { name: "Sàng ước (Sieve Divisors)", code: `void sieve_div() {\n  for (int i = 1; i <= N; i++) d[i] = 1; \n  for (int i = 2; i <= N; i++) {\n    for (int j = i; j <= N; j += i)\n      d[j]++;\n  }\n}`, example: "Đếm số lượng ước của mỗi số từ 1 đến N" },
-                { name: "Kiểm tra nguyên tố", code: `int ktnt(int n) {\n  if(n<2) return 0;\n  for(int i=2;i*i<=n;i++) if(n%i==0) return 0;\n  return 1;\n}` },
-                { name: "Sàng nguyên tố (Sieve)", code: `void sieve() {\n  memset(isPrime,true,sizeof(isPrime));\n  isPrime[1]= isPrime[0] = false;\n  for(long long i = 2; i * i <= nmax; ++i)\n    if(isPrime[i])\n      for(long long j = i * i; j <= nmax; j += i)\n        isPrime[j] = false;\n}` },
-                { name: "Hàm kiểm tra Fibonacci", code: `void fbnc(int n) {\n  int a=1,b=1,m=1,i=1;\n  while(a<=n) { i++; b=m; m=a; a+=b; }\n  if(a-b==n) cout<<i<<endl;\n  else cout<<"-1"<<endl;\n}` },
-                { name: "Phân tích TSNT (Có mũ)", code: `int n; cin >> n; int dem;\nfor(int i = 2; i <= n; i++) {\n  dem = 0;\n  while(n % i == 0) { ++dem; n/=i; }\n  if(dem) {\n    cout<<i;\n    if(dem>1) cout <<"^"<<dem;\n    if(n>i) cout<<"*";\n  }\n}` },
-                { name: "Phân tích TSNT (Không mũ)", code: `void tsnt(int n) {\n  int i=2, dem=0, a[100];\n  while (n>1) {\n    if (n%i==0) { n/=i; a[dem++]=i; }\n    else i++;\n  }\n  if (dem == 0) a[dem++] = n;\n  for (i=0;i<dem;i++) cout<<a[i]<<" ";\n}` }
-            ]},
-            { cat: "📐 Hình học & Toán", emoji: "📐", items: [
-                { name: "Khoảng cách 2 điểm", code: `double kc(int x1,int y1,int x2,int y2) {\n  return sqrt(pow((x1-x2),2)+pow((y1-y2),2));\n}` },
-                { name: "Diện tích tam giác (Heron)", code: `double dt(int x1,int y1,int x2,int y2,int x3,int y3) {\n  int d1=kc(x1,y1,x2,y2);\n  int d2=kc(x2,y3,x3,y3);\n  int d3=kc(x1,y1,x3,y3);\n  int k=(d1+d2+d3)/2;\n  return sqrt(k*(k-d1)*(k-d2)*(k-d3));\n}` },
-                { name: "Kiểm tra chính phương", code: `int ktcp(int n) {\n  int x=(int)sqrt(n);\n  return (x*x==n);\n}` },
-                { name: "UCLN & BCNN", code: `int ucln(int m,int n) { if(n==0) return m; return ucln(n,(m%n)); }\n\nint bcnn(int a,int b) { return a*b/ucln(a,b); }` },
-                { name: "Căn bậc hai (Tối ưu)", code: `void cb2(int n) {\n  for(int i=sqrt(n);i>=1;i--)\n  if(n%(i*i)==0) {\n    cout<<i<<" "<<n/(i*i)<<endl;\n    break;\n  }\n}` }
-            ]},
-            { cat: "🧶 Xử lý Xâu & Mảng", emoji: "🧶", items: [
-                { name: "Cộng 2 số siêu lớn", code: `string tong(string a,string b) {\n  while(a.length()<b.length()) a='0'+a;\n  while(a.length()>b.length()) b='0'+b;\n  int nho=0; string kq;\n  for(int i=a.length()-1;i>=0;--i) {\n    int d=(a[i]-'0')+(b[i]-'0')+nho;\n    nho=d/10; kq=(char)(d%10+'0')+kq;\n  }\n  if(nho) kq='1'+kq;\n  return kq;\n}` },
-                { name: "Số lần xuất hiện (Xâu)", code: `// Đoạn code sort và đếm\nfor(int i=0;i<=s.length()-2;i++)\n  for(int j=i+1;j<=s.length()-1;j++)\n    if(s[i] >= s[j]) swap(s[i], s[j]);\nint dem = 1;\nfor(int i=0;i<=s.length()-1;i++)\n  if(s[i] == s[i+1]) dem++;\n  else { cout<<s[i]<<" "<<dem<<endl; dem = 1; }` },
-                { name: "Đếm kí tự (Fixed)", code: `void demslxh(string s) {\n  sort(s.begin(),s.end());\n  int d=0;\n  for(int i=0;i<s.length();i++) {\n    d++;\n    if(s[i]!=s[i+1]) { cout<<s[i]<<" "<<d<<endl; d=0; }\n  }\n}` },
-                { name: "Nhập mảng vô hạn", code: `int a[1000], n=0, x;\nwhile(cin>>x) { a[++n]=x; }` }
-            ]},
-            { cat: "🛠️ Mẹo & Syntax", emoji: "🛠️", items: [
-                { name: "Mã ASCII Cần nhớ", code: `-48: Kí tự số -> Số\n+32: Hoa -> Thường\n'32': Dấu cách\n'0'-'9': Kiểm tra số\n'A'-'Z': Kiểm tra chữ` },
-                { name: "Sort các loại", code: `sort(a, a+n); // Tăng\nsort(a, a+n, greater<int>()); // Giảm\nsort(s.begin(), s.end()); // Xâu` },
-                { name: "Convert số -> xâu", code: `ostringstream convert;\nconvert << number;\nstring result = convert.str();` },
-                { name: "Memset & Vector", code: `memset(mang, gia_tri, sizeof mang);\nvector<int> a(n, 0);` },
-                { name: "Static Cast", code: `int k=static_cast<char>(t);\nchar t=static_cast<int>(k);` },
-                { name: "Đỉnh hình chữ nhật M2C", code: `int kt(int i,int j,int h,int k) {\n  if(a[i][j]+a[j][k]+a[h][k]+a[h][j]==s) return 1;\n  return 0;\n}` }
-            ]}
-        ];
+  <div id="view-grid" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+    <!-- Render Code Here -->
+  </div>
 
-        function render(filter = "") {
-            const grid = document.getElementById('view-grid');
-            grid.innerHTML = "";
-            let rawMD = "";
+  <div id="desmos-container" class="w-full relative animate-fade-in">
+    <div class="absolute top-4 left-4 z-10 bg-black/80 px-4 py-2 border border-gray-400 rounded-lg text-gray-300 font-['JetBrains_Mono'] text-xs backdrop-blur-md">
+      Live Math Rendering
+    </div>
+    <div id="calculator"></div>
+  </div>
 
-            snippets.forEach(group => {
-                const filtered = group.items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase()));
-                if (filtered.length > 0) {
-                    rawMD += `### ${group.cat}\n`;
-                    const div = document.createElement('div');
-                    div.className = "break-inside-avoid mb-6";
-                    div.innerHTML = `
-                        <div class="neon-card p-5 rounded-2xl">
-                            <h2 class="text-lg font-black mb-4 dark:text-cyan-300 text-blue-700 flex items-center gap-2">
-                                <span>${group.emoji}</span> ${group.cat}
-                            </h2>
-                            <div class="space-y-4">
-                                ${filtered.map(item => {
-                                    rawMD += `#### ${item.name}\n\`\`\`cpp\n${item.code}\n\`\`\`\n`;
-                                    return `
-                                    <div>
-                                        <div class="flex justify-between items-center mb-1">
-                                            <span class="text-xs font-bold uppercase tracking-tighter opacity-70">${item.name}</span>
-                                            <button onclick="copySingle(\`${btoa(unescape(encodeURIComponent(item.code)))}\`, this)" class="text-[10px] bg-cyan-500/10 text-cyan-500 px-2 py-1 rounded hover:bg-cyan-500 hover:text-white transition">COPY</button>
-                                        </div>
-                                        <pre class="p-3 rounded-lg overflow-x-auto code-font"><code>${escapeHTML(item.code)}</code></pre>
-                                    </div>`;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(div);
-                }
-            });
-            document.getElementById('rawTextarea').value = rawMD;
-        }
+</main>
 
-        function escapeHTML(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
 
-        function copySingle(base64, btn) {
-            const code = decodeURIComponent(escape(atob(base64)));
-            navigator.clipboard.writeText(code);
-            const original = btn.innerText;
-            btn.innerText = "COPIED!";
-            setTimeout(() => btn.innerText = original, 1000);
-        }
+<script>
+  /* =========================================
+     TAB SWITCHING & DESMOS INIT
+     ========================================= */
+  let calcInstance = null;
 
-        function copyRaw() {
-            const text = document.getElementById('rawTextarea').value;
-            navigator.clipboard.writeText(text);
-            alert("Đã copy toàn bộ Markdown!");
-        }
+  function switchTab(tab) {
+    const btnCode = document.getElementById('btn-code');
+    const btnDesmos = document.getElementById('btn-desmos');
+    const viewGrid = document.getElementById('view-grid');
+    const searchBar = document.getElementById('search-bar');
+    const desmosWrap = document.getElementById('desmos-container');
 
-        function toggleTheme() {
-            const html = document.documentElement;
-            const isDark = html.classList.toggle('dark');
-            document.getElementById('themeIcon').innerText = isDark ? "🌙" : "☀️";
-        }
+    if(tab === 'code') {
+      btnCode.classList.add('tab-active');
+      btnDesmos.classList.remove('tab-active');
+      viewGrid.style.display = 'block';
+      searchBar.style.display = 'block';
+      desmosWrap.style.display = 'none';
+    } else {
+      btnDesmos.classList.add('tab-active');
+      btnCode.classList.remove('tab-active');
+      viewGrid.style.display = 'none';
+      searchBar.style.display = 'none';
+      desmosWrap.style.display = 'block';
+      if(!calcInstance) initDesmos();
+      else calcInstance.resize(); 
+    }
+  }
 
-        function switchTab(tab) {
-            document.getElementById('view-grid').className = tab === 'grid' ? 'columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6' : 'hide';
-            document.getElementById('view-raw').className = tab === 'raw' ? '' : 'hide';
-            document.getElementById('btn-grid').className = tab === 'grid' ? 'tab-active py-2' : 'py-2 opacity-50';
-            document.getElementById('btn-raw').className = tab === 'raw' ? 'tab-active py-2' : 'py-2 opacity-50';
-        }
+  function initDesmos() {
+    var elt = document.getElementById('calculator');
+    calcInstance = Desmos.GraphingCalculator(elt, {
+      keypad: false, expressions: true, settingsMenu: false, zoomButtons: false, invertedColors: true, border: false
+    });
+    calcInstance.setExpression({ id: '1', latex: 'y=\\sin(x)', color: '#ffffff' }); 
+    calcInstance.setExpression({ id: '2', latex: 'y=\\cos(x)', color: '#888888' }); 
+    calcInstance.setExpression({ id: '3', latex: 'x^2+y^2=10', color: '#555555', lineStyle: Desmos.Styles.DASHED }); 
+  }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => render(e.target.value));
-        render();
-    </script>
+  /* =========================================
+     DỮ LIỆU C++ (GỘP TỪ CẢ 2 SOURCE, KHÔNG XÓA MỤC NÀO)
+     ========================================= */
+  const snippets = [
+      { cat: "🚀 Setup & Tối ưu", emoji: "⚡", items: [
+          { name: "Fast I/O", code: `#include <bits/stdc++.h>\nusing namespace std;\n\nvoid fast_io() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    cout.tie(NULL);\n}\n\nint main() {\n    fast_io();\n    // ...\n    return 0;\n}` }
+      ]},
+      { cat: "🔢 Số học & Nguyên tố", emoji: "💎", items: [
+          { name: "Sàng nguyên tố", code: `const int MAXN = 1e6 + 5;\nbool isPrime[MAXN];\n\nvoid sieve() {\n    memset(isPrime, true, sizeof(isPrime));\n    isPrime[0] = isPrime[1] = false;\n    for (long long i = 2; i * i < MAXN; ++i) {\n        if (isPrime[i]) {\n            for (long long j = i * i; j < MAXN; j += i) {\n                isPrime[j] = false;\n            }\n        }\n    }\n}` },
+          { name: "UCLN & BCNN", code: `long long gcd(long long a, long long b) {\n    if(b == 0) return a;\n    return gcd(b, a % b);\n}\n\nlong long lcm(long long a, long long b) {\n    return (a / gcd(a, b)) * b;\n}` },
+          { name: "Sàng ước (Sieve Divisors)", code: `void sieve_div() {\n  for (int i = 1; i <= N; i++) d[i] = 1; \n  for (int i = 2; i <= N; i++) {\n    for (int j = i; j <= N; j += i)\n      d[j]++;\n  }\n}` },
+          { name: "Kiểm tra nguyên tố", code: `int ktnt(int n) {\n  if(n<2) return 0;\n  for(int i=2;i*i<=n;i++) if(n%i==0) return 0;\n  return 1;\n}` },
+          { name: "Sàng nguyên tố (Cách 2)", code: `void sieve() {\n  memset(isPrime,true,sizeof(isPrime));\n  isPrime[1]= isPrime[0] = false;\n  for(long long i = 2; i * i <= nmax; ++i)\n    if(isPrime[i])\n      for(long long j = i * i; j <= nmax; j += i)\n        isPrime[j] = false;\n}` },
+          { name: "Hàm kiểm tra Fibonacci", code: `void fbnc(int n) {\n  int a=1,b=1,m=1,i=1;\n  while(a<=n) { i++; b=m; m=a; a+=b; }\n  if(a-b==n) cout<<i<<endl;\n  else cout<<"-1"<<endl;\n}` },
+          { name: "Phân tích TSNT (Có mũ)", code: `int n; cin >> n; int dem;\nfor(int i = 2; i <= n; i++) {\n  dem = 0;\n  while(n % i == 0) { ++dem; n/=i; }\n  if(dem) {\n    cout<<i;\n    if(dem>1) cout <<"^"<<dem;\n    if(n>i) cout<<"*";\n  }\n}` },
+          { name: "Phân tích TSNT (Không mũ)", code: `void tsnt(int n) {\n  int i=2, dem=0, a[100];\n  while (n>1) {\n    if (n%i==0) { n/=i; a[dem++]=i; }\n    else i++;\n  }\n  if (dem == 0) a[dem++] = n;\n  for (i=0;i<dem;i++) cout<<a[i]<<" ";\n}` }
+      ]},
+      { cat: "🧮 Số học cơ bản", emoji: "🧮", items: [
+          { name: "Chuyển xâu sang số (Cơ số)", code: `// VD: cd('123') -> 123\nint cd(string s) {\n  int t=0;\n  while(s.length()>0) {\n    int k=s[0]-48;\n    t=t*10+k;\n    s=s.erase(0,1);\n  }\n  return t;\n}` },
+          { name: "Tổng chữ số", code: `// VD: tcs(123) -> 6\nint tcs(int n) {\n  int t=0;\n  while(n>0) { t+=n%10; n/=10; }\n  return t;\n}` },
+          { name: "Số lượng chữ số", code: `// VD: slcs(100) -> 3\nint slcs(int n) {\n  int t=0;\n  while(n>0) { t++; n/=10; }\n  return t;\n}` }
+      ]},
+      { cat: "⚙️ Nhị phân & Hệ cơ số", emoji: "🔌", items: [
+          { name: "Lấy xâu nhị phân", code: `string xnp(int n) {\n  string s="";\n  while(n>0) {\n    char t=(char)(n%2 + '0');\n    s=t+s; n=n/2;\n  }\n  return s;\n}` },
+          { name: "Số thập phân từ xâu nhị phân", code: `int dtp(string s) {\n  int k=0;\n  for(int i=0;i<s.length();i++) {\n    int n=s.length();\n    k+=(s[i]-48)*pow(2,n-i-1);\n  }\n  return k;\n}` }
+      ]},
+      { cat: "📐 Hình học & Toán", emoji: "📐", items: [
+          { name: "Khoảng cách 2 điểm", code: `double kc(int x1,int y1,int x2,int y2) {\n  return sqrt(pow((x1-x2),2)+pow((y1-y2),2));\n}` },
+          { name: "Diện tích tam giác (Heron)", code: `double dt(int x1,int y1,int x2,int y2,int x3,int y3) {\n  int d1=kc(x1,y1,x2,y2);\n  int d2=kc(x2,y3,x3,y3);\n  int d3=kc(x1,y1,x3,y3);\n  int k=(d1+d2+d3)/2;\n  return sqrt(k*(k-d1)*(k-d2)*(k-d3));\n}` },
+          { name: "Kiểm tra chính phương", code: `int ktcp(int n) {\n  int x=(int)sqrt(n);\n  return (x*x==n);\n}` },
+          { name: "Căn bậc hai (Tối ưu)", code: `void cb2(int n) {\n  for(int i=sqrt(n);i>=1;i--)\n  if(n%(i*i)==0) {\n    cout<<i<<" "<<n/(i*i)<<endl;\n    break;\n  }\n}` }
+      ]},
+      { cat: "🕸️ Đồ thị", emoji: "🪐", items: [
+          { name: "DFS", code: `vector<int> adj[1005];\nbool visited[1005];\n\nvoid dfs(int u) {\n    visited[u] = true;\n    for (int v : adj[u]) {\n        if (!visited[v]) dfs(v);\n    }\n}` },
+          { name: "BFS", code: `void bfs(int start) {\n    queue<int> q;\n    q.push(start);\n    visited[start] = true;\n    while (!q.empty()) {\n        int u = q.front(); q.pop();\n        for (int v : adj[u]) {\n            if (!visited[v]) {\n                visited[v] = true;\n                q.push(v);\n            }\n        }\n    }\n}` }
+      ]},
+      { cat: "🧶 Xử lý Xâu & Mảng", emoji: "🧬", items: [
+          { name: "Cộng 2 số siêu lớn", code: `string add(string a, string b) {\n    while(a.length() < b.length()) a = '0' + a;\n    while(a.length() > b.length()) b = '0' + b;\n    int carry = 0;\n    string res = "";\n    for(int i = a.length() - 1; i >= 0; --i) {\n        int tmp = (a[i] - '0') + (b[i] - '0') + carry;\n        carry = tmp / 10;\n        res = char(tmp % 10 + '0') + res;\n    }\n    if(carry) res = '1' + res;\n    return res;\n}` },
+          { name: "Số lần xuất hiện (Xâu)", code: `// Đoạn code sort và đếm\nfor(int i=0;i<=s.length()-2;i++)\n  for(int j=i+1;j<=s.length()-1;j++)\n    if(s[i] >= s[j]) swap(s[i], s[j]);\nint dem = 1;\nfor(int i=0;i<=s.length()-1;i++)\n  if(s[i] == s[i+1]) dem++;\n  else { cout<<s[i]<<" "<<dem<<endl; dem = 1; }` },
+          { name: "Đếm kí tự (Fixed)", code: `void demslxh(string s) {\n  sort(s.begin(),s.end());\n  int d=0;\n  for(int i=0;i<s.length();i++) {\n    d++;\n    if(s[i]!=s[i+1]) { cout<<s[i]<<" "<<d<<endl; d=0; }\n  }\n}` },
+          { name: "Nhập mảng vô hạn", code: `int a[1000], n=0, x;\nwhile(cin>>x) { a[++n]=x; }` }
+      ]},
+      { cat: "🛠️ Mẹo & Syntax", emoji: "🛠️", items: [
+          { name: "Mã ASCII Cần nhớ", code: `-48: Kí tự số -> Số\n+32: Hoa -> Thường\n'32': Dấu cách\n'0'-'9': Kiểm tra số\n'A'-'Z': Kiểm tra chữ` },
+          { name: "Sort các loại", code: `sort(a, a+n); // Tăng\nsort(a, a+n, greater<int>()); // Giảm\nsort(s.begin(), s.end()); // Xâu` },
+          { name: "Convert số -> xâu", code: `ostringstream convert;\nconvert << number;\nstring result = convert.str();` },
+          { name: "Memset & Vector", code: `memset(mang, gia_tri, sizeof mang);\nvector<int> a(n, 0);` },
+          { name: "Static Cast", code: `int k=static_cast<char>(t);\nchar t=static_cast<int>(k);` },
+          { name: "Đỉnh hình chữ nhật M2C", code: `int kt(int i,int j,int h,int k) {\n  if(a[i][j]+a[j][k]+a[h][k]+a[h][j]==s) return 1;\n  return 0;\n}` }
+      ]}
+  ];
+
+  /* =========================================
+     RENDER DATA & SYNTAX HIGHLIGHTING
+     ========================================= */
+  function render(filter = "") {
+      const grid = document.getElementById('view-grid');
+      grid.innerHTML = "";
+      
+      snippets.forEach(group => {
+          const filtered = group.items.filter(i => i.name.toLowerCase().includes(filter.toLowerCase()));
+          if (filtered.length > 0) {
+              const div = document.createElement('div');
+              div.className = "break-inside-avoid mb-6";
+              
+              let itemsHTML = filtered.map(item => `
+                  <div class="jeb-card p-5 mb-4" id="card-${item.name.replace(/\s+/g, '-')}">
+                      <div class="flex justify-between items-center mb-3">
+                          <span class="text-sm font-bold uppercase tracking-wider text-gray-300">${item.name}</span>
+                          <button onclick="copyCode(this, \`${encodeURIComponent(item.code)}\`, 'card-${item.name.replace(/\s+/g, '-')}')" 
+                            class="text-[10px] bg-white/10 px-3 py-1.5 rounded text-white font-['JetBrains_Mono'] hover:bg-white hover:text-black transition-colors cursor-pointer z-10">
+                            COPY
+                          </button>
+                      </div>
+                      <pre><code class="language-cpp">${item.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+                  </div>
+              `).join('');
+
+              div.innerHTML = `
+                  <div class="mb-3 ml-1">
+                      <h2 class="text-lg font-bold flex items-center gap-2 text-white">
+                          <span style="filter: grayscale(100%);">${group.emoji}</span> ${group.cat}
+                      </h2>
+                  </div>
+                  ${itemsHTML}
+              `;
+              grid.appendChild(div);
+          }
+      });
+
+      Prism.highlightAll();
+  }
+
+  document.getElementById('searchInput').addEventListener('input', (e) => render(e.target.value));
+  render();
+
+  /* =========================================
+     CLICK TO COPY & RAINBOW FLASH ANIMATION (Giờ thành nháy Trắng Đen)
+     ========================================= */
+  let toastTimeout;
+  window.copyCode = function(btn, encodedCode, cardId) {
+      const code = decodeURIComponent(encodedCode);
+      navigator.clipboard.writeText(code);
+      
+      const card = document.getElementById(cardId);
+      card.classList.remove('copied-flash');
+      void card.offsetWidth; 
+      card.classList.add('copied-flash');
+
+      const originalText = btn.innerText;
+      btn.innerText = "COPIED!";
+      setTimeout(() => { btn.innerText = originalText; }, 1000);
+
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 2000);
+  }
+
+  /* =========================================
+     CON TRỎ CHUỘT (DOT + RING) & HIỆU ỨNG TỎA HẠT (Trắng/Xám)
+     ========================================= */
+  const cDot = document.getElementById('cursor-dot');
+  const cRing = document.getElementById('cursor-ring');
+  let mx = window.innerWidth/2, my = window.innerHeight/2;
+  let rx = mx, ry = my;
+
+  document.addEventListener('mousemove', e => { 
+    mx = e.clientX; my = e.clientY; 
+    cDot.style.left = mx + 'px'; cDot.style.top = my + 'px';
+  });
+
+  document.addEventListener('mousedown', () => { cRing.style.width = '20px'; cRing.style.height = '20px'; });
+  document.addEventListener('mouseup', () => { cRing.style.width = '34px'; cRing.style.height = '34px'; });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  const fireCanvas = document.getElementById('fire-canvas');
+  const fCtx = fireCanvas.getContext('2d');
+  fireCanvas.width = window.innerWidth; fireCanvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { fireCanvas.width = window.innerWidth; fireCanvas.height = window.innerHeight; });
+
+  const fireParticles = [];
+  
+  class FireParticle {
+    constructor(x, y) {
+      this.x = x; this.y = y;
+      this.vx = (Math.random() - 0.5) * 1.5;
+      this.vy = (Math.random() - 0.5) * 1.5;
+      this.life = 1; this.decay = Math.random() * 0.03 + 0.02;
+      this.size = Math.random() * 2 + 1;
+      /* Các hạt lửa được set về dải màu Trắng và Xám */
+      this.color = Math.random() > 0.5 ? '255, 255, 255' : '150, 150, 150';
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      this.life -= this.decay; this.size *= 0.95;
+    }
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.color}, ${this.life})`;
+      ctx.fill();
+    }
+  }
+
+  let lastMx = mx, lastMy = my;
+  function animateCursor() {
+    rx = lerp(rx, mx, 0.15); ry = lerp(ry, my, 0.15);
+    cRing.style.left = rx + 'px'; cRing.style.top = ry + 'px';
+
+    fCtx.clearRect(0, 0, fireCanvas.width, fireCanvas.height);
+    const speed = Math.sqrt((mx - lastMx)**2 + (my - lastMy)**2);
+    
+    if (speed > 1) fireParticles.push(new FireParticle(mx, my));
+    lastMx = mx; lastMy = my;
+
+    for (let i = fireParticles.length - 1; i >= 0; i--) {
+      fireParticles[i].update();
+      fireParticles[i].draw(fCtx);
+      if (fireParticles[i].life <= 0) fireParticles.splice(i, 1);
+    }
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+</script>
 </body>
 </html>
